@@ -38,15 +38,19 @@ export const App = () => {
     fetchNews();
   };
 
+  // 日付の取得
   const handleChange = (newValue: Date | null) => {
     setDate(newValue);
   };
+  // 地域の取得
   const onChangeArea = (event: SelectChangeEvent<HTMLInputElement>) => {
     setArea(event.target.value);
   };
+  // チャンネルの取得
   const onChangeService = (event: SelectChangeEvent<HTMLInputElement>) => {
     setService(event.target.value);
   };
+  // ジャンルの取得
   const onChangeGenre = (event: SelectChangeEvent<HTMLInputElement>) => {
     setGenre(event.target.value);
   };
