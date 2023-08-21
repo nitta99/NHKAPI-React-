@@ -10,66 +10,50 @@ import { Grid, Button, SelectChangeEvent } from "@mui/material";
 import { useEffect, useState } from "react";
 
 export const App = () => {
-  const [programs, setPrograms] = useState([]);
+  const [news, setNews] = useState([]);
 
-  useEffect(() => {
-    // NHK番組表APIのエンドポイントとアクセスキーを設定
-    const apiUrl = "https://api.nhk.or.jp/v2/pg/list/130/g1/2023-08-14.json";
+  const [area, setArea] = useState<string | HTMLInputElement>();
+  const [service, setService] = useState<string | HTMLInputElement>();
+  const [genre, setGenre] = useState<string | HTMLInputElement>();
+  const [date, setDate] = useState<Date | null>(null);
+
+  const onClickSearch = () => {
+    // NHK APIのエンドポイントとアクセスキーを設定
+    const apiUrl = `https://api.nhk.or.jp/v2/pg/list/${area}/${service}/${date
+      ?.toISOString()
+      .slice(0, 10)}.json`;
     const apiKey = "vIwwo0nBtxJUnw5A0sSsq9is4n8O6QM3";
-
     // APIリクエストを行う関数
-    const fetchPrograms = async () => {
+    const fetchNews = async () => {
       try {
         const response = await fetch(`${apiUrl}?key=${apiKey}`);
+        console.log(response);
         const data = await response.json();
-        setPrograms(data.list.g1);
+        setNews(data.articles); // 受け取ったデータをstateにセット
       } catch (error) {
-        console.error("Error fetching NHK programs:", error);
+        console.error("Error fetching NHK news:", error);
       }
     };
 
-    fetchPrograms();
-  }, []);
-  // const [area, setArea] = useState<string | HTMLInputElement>();
-  // const [service, setService] = useState<string | HTMLInputElement>();
-  // const [genre, setGenre] = useState<string | HTMLInputElement>();
-  // const [date, setDate] = useState<Date | null>(null);
+    fetchNews();
+  };
 
-  // const onClickSearch = () => {
-  //   // NHK APIのエンドポイントとアクセスキーを設定
-  //   const apiUrl = `https://api.nhk.or.jp/v2/pg/list/010/g1/2022-12-10.json?key="vIwwo0nBtxJUnw5A0sSsq9is4n8O6QM3"`;
-
-  //   // APIリクエストを行う関数
-  //   const fetchNews = async () => {
-  //     try {
-  //       const response = await fetch(apiUrl);
-  //       const data = await response.json();
-  //       console.log(data);
-  //       setNews(data.articles); // 受け取ったデータをstateにセット
-  //     } catch (error) {
-  //       console.error("Error fetching NHK news:", error);
-  //     }
-  //   };
-
-  //   fetchNews();
-  // };
-
-  // const handleChange = (newValue: Date | null) => {
-  //   setDate(newValue);
-  // };
-  // const onChangeArea = (event: SelectChangeEvent<HTMLInputElement>) => {
-  //   setArea(event.target.value);
-  // };
-  // const onChangeService = (event: SelectChangeEvent<HTMLInputElement>) => {
-  //   setService(event.target.value);
-  // };
-  // const onChangeGenre = (event: SelectChangeEvent<HTMLInputElement>) => {
-  //   setGenre(event.target.value);
-  // };
+  const handleChange = (newValue: Date | null) => {
+    setDate(newValue);
+  };
+  const onChangeArea = (event: SelectChangeEvent<HTMLInputElement>) => {
+    setArea(event.target.value);
+  };
+  const onChangeService = (event: SelectChangeEvent<HTMLInputElement>) => {
+    setService(event.target.value);
+  };
+  const onChangeGenre = (event: SelectChangeEvent<HTMLInputElement>) => {
+    setGenre(event.target.value);
+  };
 
   return (
     <div className="App">
-      {/* <Grid container alignItems="center">
+      <Grid container alignItems="center">
         <Grid item xs={3}>
           <AreaSelect onChange={onChangeArea} />
         </Grid>
@@ -85,7 +69,6 @@ export const App = () => {
               <DatePicker
                 sx={{ width: "200px" }}
                 format="YYYY-MM-DD"
-                label="Basic date picker"
                 value={date}
                 onChange={handleChange}
               />
@@ -100,11 +83,11 @@ export const App = () => {
         onClick={onClickSearch}
       >
         検索
-      </Button> */}
+      </Button>
       <div>
         <ul>
-          {programs.map((program, index) => (
-            <li key={index}>{program.title}</li>
+          {news?.map((i, index) => (
+            <li key={index}>{i.title}</li>
           ))}
         </ul>
       </div>
