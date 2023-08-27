@@ -28,8 +28,9 @@ export const App = () => {
         const response = await fetch(`${apiUrl}?key=${apiKey}`);
         console.log(response);
         const data = await response.json();
-        console.log(data.list);
-        setNews(data.articles); // 受け取ったデータをstateにセット
+        console.log(data.list.g1[0].title);
+        // NHK総合1選択時に画面に表示できる
+        setNews(data.list.g1[0]); // 受け取ったデータをstateにセット
       } catch (error) {
         console.error("Error fetching NHK news:", error);
       }
@@ -86,11 +87,7 @@ export const App = () => {
         検索
       </Button>
       <div>
-        <ul>
-          {news?.map((i, index) => (
-            <li key={index}>{i.list}</li>
-          ))}
-        </ul>
+        <ul>{news.title}</ul>
       </div>
     </div>
   );
