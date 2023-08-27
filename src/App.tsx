@@ -2,12 +2,11 @@ import "./styles.css";
 import { AreaSelect } from "./components/AreaSelect";
 import { ServiceSelect } from "./components/ServiceSelect";
 import { GenreSelect } from "./components/GenreSelect";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { Grid, Button, SelectChangeEvent } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export const App = () => {
   const [news, setNews] = useState([]);
@@ -29,6 +28,7 @@ export const App = () => {
         const response = await fetch(`${apiUrl}?key=${apiKey}`);
         console.log(response);
         const data = await response.json();
+        console.log(data.list);
         setNews(data.articles); // 受け取ったデータをstateにセット
       } catch (error) {
         console.error("Error fetching NHK news:", error);
@@ -69,15 +69,12 @@ export const App = () => {
         </Grid>
         <Grid item xs={3}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DemoContainer components={["DatePicker"]}>
-              <DatePicker
-                sx={{ width: "200px" }}
-                format="YYYY-MM-DD"
-                value={date}
-                onChange={handleChange}
-              />
-            </DemoContainer>
-          </LocalizationProvider>{" "}
+            <DatePicker
+              sx={{ width: "200px" }}
+              value={date}
+              onChange={handleChange}
+            />
+          </LocalizationProvider>
         </Grid>
       </Grid>
       <Button
@@ -91,7 +88,7 @@ export const App = () => {
       <div>
         <ul>
           {news?.map((i, index) => (
-            <li key={index}>{i.title}</li>
+            <li key={index}>{i.list}</li>
           ))}
         </ul>
       </div>
